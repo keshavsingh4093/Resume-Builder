@@ -144,32 +144,119 @@ function SignupForm() {
 // Forgot Password Form Component
 function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    // Add logic to handle password reset (e.g., API call)
-    alert(`Password reset link sent to: ${email}`);
+    const randomOtp = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit OTP
+    setGeneratedOtp(randomOtp);
+    setIsOtpSent(true);
+    alert(`OTP sent to ${email}: ${randomOtp}`); // For testing purposes, show OTP
+  };
+
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    if (parseInt(otp) === generatedOtp) {
+      setIsVerified(true);
+      alert("OTP verified! You can now reset your password.");
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  };
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match. Please try again.");
+      return;
+    }
+    alert("Password reset successfully!");
+    setEmail("");
+    setOtp("");
+    setGeneratedOtp(null);
+    setIsOtpSent(false);
+    setIsVerified(false);
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
-    <form onSubmit={handleForgotPassword}>
+    <form>
       <h2>Forgot Password</h2>
-      <div className="input-group">
-        <label>Email</label>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Reset Password</button>
+      {!isOtpSent && !isVerified && (
+        <>
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <button type="button" onClick={handleForgotPassword}>
+            Send OTP
+          </button>
+        </>
+      )}
+
+      {isOtpSent && !isVerified && (
+        <>
+          <div className="input-group">
+            <label>Enter OTP</label>
+            <input
+              type="number"
+              placeholder="Enter the OTP sent to your email"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+          </div>
+          <button type="button" onClick={handleVerifyOtp}>
+            Verify OTP
+          </button>
+        </>
+      )}
+
+      {isVerified && (
+        <>
+          <div className="input-group">
+            <label>New Password</label>
+            <input
+              type="password"
+              placeholder="Enter your new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Confirm your new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="button" onClick={handleResetPassword}>
+            Reset Password
+          </button>
+        </>
+      )}
     </form>
   );
 }
 
-// Dashboard Componentnp
+
+// Dashboard Component
 
 
 function Dashboard({ onLogout }) {
