@@ -45,6 +45,8 @@ const signUpUser = async (req, res) => {
     try {
         const { email, name, password } = req.body;
 
+        console.log(email,name,password);
+
         const chechUser = await User.findOne({ email });
 
         if (chechUser) {
@@ -190,7 +192,7 @@ const resetPassword = async (req, res) => {
 
         const hashPassword = await argon2.hash(password);
 
-        user.password = password;
+        user.password = hashPassword;
 
         await user.save();
 

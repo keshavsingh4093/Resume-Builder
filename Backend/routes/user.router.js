@@ -26,7 +26,7 @@ userRouter.get("/get-user-details", async(req, res) => {
 
     const user = await User.findOne({ email });
             
-    res.status(200).json({user});
+    res.status(200).json({name:user.name,email:user.email});
 })
 
 userRouter.post("/upload-resume", uploadResume);
