@@ -1,6 +1,7 @@
 import { userRouter } from "./routes/user.router.js";
 import { dbConnection } from "./dbConnection.js";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 import express from "express";
 import cors from "cors";
 import "dotenv/config"
@@ -13,6 +14,8 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(express.json());
+
+app.use(fileUpload({ useTempFiles: true }));
 
 app.use(userRouter);
 
